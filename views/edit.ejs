@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Books</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .book {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #f5f5f5;
+        }
+        .book p {
+            margin: 5px 0;
+        }
+        .edit-form {
+            display: none;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ccc;
+        }
+        .edit-form input {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .edit-form button {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            background-color: #333;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .edit-form button:hover {
+            background-color: #555;
+        }
+        .edit-button {
+            margin-right: 10px;
+        }
+        .back-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+        .back-btn:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Books</h1>
+        <% books.forEach(book => { %>
+            <div class="book">
+                <p>Title: <%= book.title %></p>
+                <p>Author: <%= book.author %></p>
+                <p>Genre: <%= book.genre %></p>
+                <p>Year: <%= book.year %></p>
+                <button class="edit-button" onclick="toggleEditForm('<%= book._id %>')">Edit</button>
+                <form action="/edit/<%= book._id %>?_method=DELETE" method="POST" style="display: inline-block;">
+                    <button type="submit">Delete</button>
+                </form>
+                <div class="edit-form" id="edit-form-<%= book._id %>">
+                    <form action="/edit/<%= book._id %>?_method=PUT" method="POST">
+                        <label for="title">Title:</label><br>
+                        <input type="text" name="title" value="<%= book.title %>"><br>
+                        <label for="author">Author:</label><br>
+                        <input type="text" name="author" value="<%= book.author %>"><br>
+                        <label for="genre">Genre:</label><br>
+                        <input type="text" name="genre" value="<%= book.genre %>"><br>
+                        <label for="year">Year:</label><br>
+                        <input type="text" name="year" value="<%= book.year %>"><br>
+                        <button type="submit">Update</button>
+                        <button type="button" onclick="cancelEditForm('<%= book._id %>')">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        <% }) %>
+        <a href="#" class="back-btn" onclick="goBack()">Back</a>
+    </div>
+
+    <script>
+        function toggleEditForm(bookId) {
+            const editForm = document.getElementById(`edit-form-${bookId}`);
+            if (editForm.style.display === "none" || editForm.style.display === "") {
+                editForm.style.display = "block";
+            } else {
+                editForm.style.display = "none";
+            }
+        }
+
+        function cancelEditForm(bookId) {
+            const editForm = document.getElementById(`edit-form-${bookId}`);
+            editForm.style.display = "none";
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

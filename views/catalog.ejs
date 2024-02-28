@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CATALOG</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 0;
+            padding-top: 20px;
+        }
+
+        .search-form {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .search-input {
+            padding: 8px;
+            width: 60%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .search-button {
+            padding: 8px 16px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-button:hover {
+            background-color: #555;
+        }
+
+        .sorting-links {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sorting-links a {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #333;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-right: 5px;
+        }
+
+        .sorting-links a:hover {
+            background-color: #555;
+        }
+
+        .book-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .book-item {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #fff;
+        }
+
+        .book-item strong {
+            font-weight: bold;
+        }
+
+        .backBtn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 60px;
+            height: 40px;
+            background-color: #fff;
+            border: 2px solid #333;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .backBtn:hover {
+            background-color: #333;
+            color: #fff;
+        }
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .pagination button {
+            margin: 0 5px;
+            padding: 5px 10px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .pagination button:hover {
+            background-color: #555;
+        }
+        .book-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.book-item {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #fff;
+}
+
+.book-item strong {
+    font-weight: bold;
+}
+
+.book-item a, .book-item button {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.book-item a {
+    background-color: #007bff;
+}
+
+.book-item button {
+    background-color: #dc3545;
+}
+
+.book-item a:hover, .book-item button:hover {
+    opacity: 0.8;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>OUR BOOKS</h1>
+        <button onclick="goBack()" class="backBtn">BACK</button>
+        <!-- Search Form -->
+        <form class="search-form" action="/catalog" method="GET">
+            <input class="search-input" type="text" name="search" placeholder="Search...">
+            <button class="search-button" type="submit">Search</button>
+        </form>
+    
+        <!-- Sorting Links -->
+        <div class="sorting-links">
+            <a href="/catalog?sort=title&order=asc">Sort by Title (ASC)</a>
+            <a href="/catalog?sort=title&order=desc">Sort by Title (DESC)</a>
+            <a href="/catalog?sort=author&order=asc">Sort by Author (ASC)</a>
+            <a href="/catalog?sort=author&order=desc">Sort by Author (DESC)</a>
+            <!-- Add similar links or buttons for other sorting criteria -->
+        </div>
+        
+        <ul class="book-list">
+            <% books.forEach(function(book) { %>
+                <li class="book-item">
+                    <strong>Title:</strong> <%= book.title %><br>
+                    <strong>Author:</strong> <%= book.author %><br>
+                    <strong>Genre:</strong> <%= book.genre %><br>
+                    <strong>Year:</strong> <%= book.year %><br>
+                    <!-- Links for book actions -->
+                    <a href="/api/books/<%= book._id %>" target="_blank">View Details</a>
+                    <a href="/edit/<%= book._id %>" target="_blank">Edit</a>
+                    <button onclick="deleteBook('<%= book._id %>')">Delete</button>
+                </li>
+            <% }); %>
+        </ul>   
+        
+        <!-- Your other HTML content goes here -->
+    
+        <!-- JavaScript for the back button -->
+        <script>
+            function goBack() {
+                window.history.back();
+            }
+        </script>
+        <script>
+            function goBack() {
+                window.history.back();
+            }
+
+            function deleteBook(bookId) {
+                if (confirm('Are you sure you want to delete this book?')) {
+                    fetch('/api/books/' + bookId, {
+                        method: 'DELETE',
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            location.reload(); // Reload the page after deletion
+                        } else {
+                            console.error('Error deleting book');
+                        }
+                    })
+                    .catch(error => console.error('Error deleting book:', error));
+                }
+            }
+        </script>
+    </body>
+    </html>
